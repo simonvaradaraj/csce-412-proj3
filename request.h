@@ -3,9 +3,9 @@
 
 using namespace std;
 
-class Request {
+class request {
 public:
-    Request(string ipIn, string ipOut, int time, char jobType);
+    request(string ipIn, string ipOut, int time, char jobType);
     string ipIn;
     string ipOut;
     int time;
