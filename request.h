@@ -1,3 +1,6 @@
+#ifndef REQUEST_H
+#define REQUEST_H
+
 #include <iostream>
 #include <string>
 
@@ -12,3 +15,5 @@ public:
     int time;
     char jobType;
 };
+
+#endif

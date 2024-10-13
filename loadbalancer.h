@@ -1,7 +1,9 @@
+#pragma once
+
 #include <iostream>
 #include <string>
 #include <queue>
-#include "request.h"
+#include "request.cpp"
 
 class loadbalancer {
 public:

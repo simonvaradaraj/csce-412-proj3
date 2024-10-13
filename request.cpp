@@ -1,4 +1,6 @@
+#ifndef REQUEST_H
 #include "request.h"
+#endif
 
 using namespace std;
 
