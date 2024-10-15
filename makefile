@@ -1,15 +1,12 @@
-CC = gcc
+CC = g++
 CFLAGS = -Wall -Werror
 
-all: myprogram
-myprogram: main.o 
-    $(CC) $(CFLAGS) -o myprogram main.o utils.o
+main: main.o
+	$(CC) $(CFLAGS) -o main.exe main.o
 
-main.o: main.c
-    $(CC) $(CFLAGS) -c main.c
-
-utils.o: utils.c
-    $(CC) $(CFLAGS) -c utils.c
-
+main.o: main.cpp
+	$(CC) $(CFLAGS) -c main.cpp 
+	
+.PHONY: clean
 clean:
-    rm -f myprogram *.o
+	rm -f *.o *.exe

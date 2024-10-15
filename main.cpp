@@ -3,12 +3,14 @@
 #include <stdlib.h>
 #include <sstream>
 
-#include "webserver.h"
-#include "loadbalancer.h"
+#include "webserver.cpp"
+#include "loadbalancer.cpp"
+#include "request.cpp"
 
 using namespace std;
 
-const int MAX_REQUESTS = 5;
+// 10 servers
+const int NUM_SERVERS = 10;
 
 request generateRequest() {
     stringstream ipIn, ipOut;
@@ -19,6 +21,41 @@ request generateRequest() {
 }
 
 int main() {
-    loadbalancer lb;
-    
+    srand(time(NULL));
+    loadbalancer balancer;
+
+    // generate a full queue (usually servers * 100)
+    for (int i = 0; i < (NUM_SERVERS * 100); i++) {
+        request req = generateRequest();
+        balancer.addRequest(req);
+    }
+
+
+    webserver serverarray[NUM_SERVERS];
+    for (int i = 0; i < NUM_SERVERS; i++) {
+        stringstream name;
+        name << "Server " << i+1;
+        serverarray[i] = webserver(name.str());
+        serverarray[i].processRequest(balancer.getRequest(), balancer.getSystemTime());
+    }
+
+    // Running for 10000 clock cycles 
+    while (balancer.getSystemTime() < 10000) {
+        int currentTime = balancer.getSystemTime();
+
+        if (serverarray[currentTime % NUM_SERVERS].isDone(currentTime)) {
+            request req = serverarray[currentTime % NUM_SERVERS].getRequest();
+            if (req.jobType == ' ') { continue; }
+            cout << "Time " << currentTime << ": " "Request from " << req.ipIn << " to " << req.ipOut << " of type " << req.jobType << " has been processed by " << serverarray[currentTime % NUM_SERVERS].getName() << endl;
+            serverarray[currentTime % NUM_SERVERS].processRequest(balancer.getRequest(), balancer.getSystemTime());
+        }
+
+        //  add new requests at random times to simulate new requests after the initial full queue you set up.
+        if ((rand() % 100) == 0) {
+            request req = generateRequest();
+            balancer.addRequest(req);
+        }
+
+        balancer.incTime();
+    }
 }

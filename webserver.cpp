@@ -23,4 +23,4 @@ void webserver::processRequest(request req, int currentTime) {
 }
 
 void webserver::setName(string name) { this->name = name; }
-bool webserver::isDone(int currentTime) { return (currentTime > (start_time + req.time)); }
+bool webserver::isDone(int currentTime) { return (currentTime >= (start_time + req.time)); }
