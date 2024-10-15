@@ -1,9 +1,10 @@
-#pragma once
+#ifndef LOADBALANCER_H
+#define LOADBALANCER_H
 
 #include <iostream>
 #include <string>
 #include <queue>
-#include "request.cpp"
+#include "request.h"
 
 class loadbalancer {
 public:
@@ -17,3 +18,5 @@ private:
     int systemTime;
     queue<request> requests;
 };
+
+#endif

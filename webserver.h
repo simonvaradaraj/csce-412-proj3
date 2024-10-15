@@ -1,6 +1,9 @@
+#ifndef WEB_SERVER_H
+#define WEB_SERVER_H
+
 #include <iostream>
 #include <string>
-#include "request.cpp"
+#include "request.h"
 
 using namespace std;
 
@@ -18,3 +21,5 @@ private:
     int start_time;
     string name;
 };
+
+#endif

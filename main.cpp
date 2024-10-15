@@ -5,7 +5,6 @@
 
 #include "webserver.h"
 #include "loadbalancer.h"
-#include "request.h"
 
 using namespace std;
 
@@ -16,10 +15,10 @@ request generateRequest() {
     ipIn << (rand() % 256) << "." << (rand() % 256) << "." << (rand() % 256) << "." << (rand() % 256);
     ipOut << (rand() % 256) << "." << (rand() % 256) << "." << (rand() % 256) << "." << (rand() % 256);
     request req(ipIn.str(), ipOut.str(), (rand() % 10) + 1, (rand() % 2) == 0 ? 'P' : 'S');
+    return req;
 }
 
-int main()
-{
-    // loadbalancer lb;
+int main() {
+    loadbalancer lb;
     
 }

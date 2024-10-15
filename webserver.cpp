@@ -1,4 +1,6 @@
+#ifndef WEB_SERVER_H
 #include "webserver.h"
+#endif
 
 using namespace std;
 

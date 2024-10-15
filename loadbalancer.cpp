@@ -1,4 +1,6 @@
+#ifndef LOADBALANCER_H
 #include "loadbalancer.h"
+#endif
 
 loadbalancer::loadbalancer() { systemTime = 0; }
 int loadbalancer::getSystemTime() { return systemTime; }
@@ -16,6 +18,7 @@ request loadbalancer::getRequest() {
         requests.pop();
         return req;
     }
+    return request();
 }
 
 bool loadbalancer::isEmpty() { return requests.empty(); }
