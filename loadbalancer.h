@@ -13,6 +13,7 @@ public:
     void incTime();
     void addRequest(request req);
     request getRequest();
+    int getSize();
     bool isEmpty();
 private:
     int systemTime;

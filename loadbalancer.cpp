@@ -8,11 +8,9 @@ void loadbalancer::incTime() { systemTime++; }
 
 void loadbalancer::addRequest(request req) {
     requests.push(req);
-    incTime();
 }
 
 request loadbalancer::getRequest() {
-    incTime();
     if (!requests.empty()) {
         request req = requests.front();
         requests.pop();
@@ -21,4 +19,5 @@ request loadbalancer::getRequest() {
     return request();
 }
 
+int loadbalancer::getSize() { return requests.size(); }
 bool loadbalancer::isEmpty() { return requests.empty(); }

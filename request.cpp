@@ -18,3 +18,7 @@ request::request(string ipIn, string ipOut, int time, char jobType) {
     this->time = time;
     this->jobType = jobType;
 }
+
+string request::toString() {
+    return "Request from " + this->ipIn + " to " + this->ipOut + " of type " + this->jobType;
+}
