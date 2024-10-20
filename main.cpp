@@ -18,6 +18,13 @@ const int INITIAL_NUM_SERVERS = 10;
 const int MIN_NUM_SERVERS = 4;   
 const int REQUEST_BURST = 1000;   
 
+// for shared access of resouroces
+mutex queueMutex; 
+mutex serverMutex;
+// notifying the threads
+atomic<bool> stopThreads(false);
+condition_variable cv;
+
 request generateRequest() {
     stringstream ipIn, ipOut;
     ipIn << (rand() % 256) << "." << (rand() % 256) << "." << (rand() % 256) << "." << (rand() % 256);
@@ -25,6 +32,28 @@ request generateRequest() {
 
     request req(ipIn.str(), ipOut.str(), (rand() % 10) + 1, (rand() % 2) == 0 ? 'P' : 'S');
     return req;
+}
+
+// function that will be running on each server thread
+void serverThread(webserver& server, loadbalancer& balancer) {
+    while (!stopThreads) {
+        int currentTime = balancer.getSystemTime();
+
+        // Lock to safely access the queue
+        unique_lock<mutex> lock(queueMutex);
+
+        if (server.isDone(currentTime)) {
+            if (balancer.getSize() > 0) {
+                request req = server.getRequest();
+                if (req.jobType != ' ') {
+                    cout << "Time " << currentTime << ": Request from " << req.ipIn << " to " << req.ipOut
+                         << " of type " << req.jobType << " has been processed by " << server.getName() << endl;
+                }
+                // place a request if the server.getRequest() gives a valid response
+                server.processRequest(balancer.getRequest(), balancer.getSystemTime());
+            }
+        }
+    }
 }
 
 int main() {
