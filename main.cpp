@@ -3,6 +3,10 @@
 #include <stdlib.h>
 #include <sstream>
 #include <vector>
+#include <thread>
+#include <mutex>
+#include <atomic>
+#include <condition_variable>
 #include "webserver.cpp"
 #include "loadbalancer.cpp"
 #include "request.cpp"
@@ -13,7 +17,6 @@ using namespace std;
 const int INITIAL_NUM_SERVERS = 10;   
 const int MIN_NUM_SERVERS = 4;   
 const int REQUEST_BURST = 1000;   
-const int CLOCK_CYCLES = 10000;   
 
 request generateRequest() {
     stringstream ipIn, ipOut;
@@ -50,7 +53,7 @@ int main() {
     }
 
     // Running for 10000 clock cycles
-    while (balancer.getSystemTime() < CLOCK_CYCLES) {
+    while (balancer.getSystemTime() < 10000) {
         // cout << "Time " << balancer.getSystemTime() << endl;
         int currentTime = balancer.getSystemTime();
 
