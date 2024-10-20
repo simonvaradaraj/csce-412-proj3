@@ -18,6 +18,7 @@ const int INITIAL_NUM_SERVERS = 10;
 const int MIN_NUM_SERVERS = 4;   
 const int REQUEST_BURST = 1000;   
 const int CLOCK_CYCLES = 10000;
+const int MAX_TASK_TIME = 10;
 
 // for shared access of resouroces
 mutex queueMutex; 
@@ -32,7 +33,7 @@ request generateRequest() {
     ipIn << (rand() % 256) << "." << (rand() % 256) << "." << (rand() % 256) << "." << (rand() % 256);
     ipOut << (rand() % 256) << "." << (rand() % 256) << "." << (rand() % 256) << "." << (rand() % 256);
 
-    request req(ipIn.str(), ipOut.str(), (rand() % 10) + 1, (rand() % 2) == 0 ? 'P' : 'S');
+    request req(ipIn.str(), ipOut.str(), (rand() % MAX_TASK_TIME) + 1, (rand() % 2) == 0 ? 'P' : 'S');
     return req;
 }
 
@@ -48,7 +49,8 @@ void serverThread(webserver& server, loadbalancer& balancer) {
                 request req = server.getRequest();
                 if (req.jobType != ' ') {
                     lock_guard<mutex> outputLock(coutMutex);
-                    cout << "Time " << currentTime << ": Request from " << req.ipIn << " to " << req.ipOut << " of type " << req.jobType << " has been processed by " << server.getName() << endl;
+                    // execution, processing, assignment, etc.
+                    cout <<  "Request from " << req.ipIn << " to " << req.ipOut << " of type " << req.jobType << " has been processed by " << server.getName() << endl;
                 }
                 // place a request if the server.getRequest() gives a valid response
                 server.processRequest(balancer.getRequest(), balancer.getSystemTime());
@@ -67,13 +69,24 @@ int main() {
         balancer.addRequest(req);
     }
 
-    // Show the starting queue size.
+    // Basic Logs
+    /*
+        1. Show the starting queue size.
+        2. Show the ending queue size. (At the bottom with End Status)
+        3. List your range for task times.
+    */
     {
         lock_guard<mutex> outputLock(coutMutex);
-        cout << "Initial queue size: " << balancer.getSize() << endl;
+        cout << "----------------------- START STATUS -----------------------" << endl;
+        cout << "Clock Cycles: " << CLOCK_CYCLES << endl;
+        cout << "Number of intial servers: " << INITIAL_NUM_SERVERS << endl;
+        cout << "Starting queue size: " << balancer.getSize() << endl;
+        cout << "Range for Task Times: 1 - " << MAX_TASK_TIME << endl;
+        cout << "Random requests have a 1/10 chance to generate" << endl;
+        cout << "Request Bursts have " << REQUEST_BURST << " requests and has a 1/1000 chance" << endl;
+        cout << "------------------------------------------------------------" << endl;
     }
 
-    // Replacing with a vector so i can resize it
     vector<webserver> serverarray;
     // added a vector for the server threads too
     vector<thread> serverThreads;
@@ -91,7 +104,6 @@ int main() {
     // Running for 10000 clock cycles
     while (balancer.getSystemTime() < CLOCK_CYCLES) {
         // cout << "Time " << balancer.getSystemTime() << endl;
-        int currentTime = balancer.getSystemTime();
 
         // Check the current queue size
         int queueSize = balancer.getSize();
@@ -126,7 +138,8 @@ int main() {
             }
             {
                 lock_guard<mutex> outputLock(coutMutex);
-                cout << "Time " << currentTime << ": Doubled servers to " << serverarray.size() << endl;
+                // show the dynamic change in number of servers
+                cout << "Doubled servers to " << serverarray.size() << endl;
             }
         }
 
@@ -151,7 +164,8 @@ int main() {
             }
             {
                 lock_guard<mutex> outputLock(coutMutex);
-                cout << "Time " << currentTime << ": Halved servers to " << serverarray.size() << endl;
+                // show the dynamic change in number of servers
+                cout << "Halved servers to " << serverarray.size() << endl;
             }
         }
         //  add new requests at random times to simulate new requests after the initial full queue you set up.
@@ -161,7 +175,8 @@ int main() {
             // cout << "Queue size: " << balancer.getSize() << endl;
             {
                 lock_guard<mutex> outputLock(coutMutex);
-                cout << "Time " << currentTime << ": Request from " << req.ipIn << " to " << req.ipOut << " of type " << req.jobType << " has been generated" << endl;
+                // randomness in request generation
+                cout << "Request from " << req.ipIn << " to " << req.ipOut << " of type " << req.jobType << " has been generated" << endl;
             }
         }
 
@@ -169,9 +184,10 @@ int main() {
         if ((rand() % REQUEST_BURST) == 0) {
             {
                 lock_guard<mutex> outputLock(coutMutex);
-                cout << "Time " << currentTime << ": Request Burst has been generated" << endl;
+                // randomness in request generation
+                cout << "Request Burst has been generated" << endl;
             }
-             for (long unsigned int i = 0; i < REQUEST_BURST; i++) {
+            for (long unsigned int i = 0; i < REQUEST_BURST; i++) {
                 request req = generateRequest();
                 balancer.addRequest(req);
             }
@@ -185,9 +201,18 @@ int main() {
             t.join();
         }
     }
-    // show the ending queue size
     {
         lock_guard<mutex> outputLock(coutMutex);
+        cout << "----------------------- END STATUS -----------------------" << endl;
+        // remaining requests in queue
         cout << "Ending queue size: " << balancer.getSize() << endl;
+        // active servers, inactive servers
+        cout << "Server Statuses: " << endl;
+        for (long unsigned int i = 0; i < serverarray.size(); i++) {
+            if (serverarray[i].getRequest().jobType != ' ') { cout << serverarray[i].getName() << ": Active" << endl;}
+            else { cout << serverarray[i].getName() << ": Inactive" << endl;}
+        }
+        // rejected/discarded requests later
+        cout << "------------------------------------------------------------" << endl;
     }
 }
