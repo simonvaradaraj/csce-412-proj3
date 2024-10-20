@@ -22,6 +22,7 @@ const int CLOCK_CYCLES = 10000;
 // for shared access of resouroces
 mutex queueMutex; 
 mutex serverMutex;
+mutex coutMutex;
 // notifying the threads
 atomic<bool> stopThreads(false);
 condition_variable cv;
@@ -46,6 +47,7 @@ void serverThread(webserver& server, loadbalancer& balancer) {
             if (!balancer.isEmpty()) {
                 request req = server.getRequest();
                 if (req.jobType != ' ') {
+                    lock_guard<mutex> outputLock(coutMutex);
                     cout << "Time " << currentTime << ": Request from " << req.ipIn << " to " << req.ipOut << " of type " << req.jobType << " has been processed by " << server.getName() << endl;
                 }
                 // place a request if the server.getRequest() gives a valid response
@@ -66,7 +68,10 @@ int main() {
     }
 
     // Show the starting queue size.
-    cout << "Initial queue size: " << balancer.getSize() << endl;
+    {
+        lock_guard<mutex> outputLock(coutMutex);
+        cout << "Initial queue size: " << balancer.getSize() << endl;
+    }
 
     // Replacing with a vector so i can resize it
     vector<webserver> serverarray;
@@ -119,7 +124,10 @@ int main() {
                     serverThreads.push_back(thread(serverThread, ref(server), ref(balancer)));
                 }
             }
-            cout << "Time " << currentTime << ": Doubled servers to " << serverarray.size() << endl;
+            {
+                lock_guard<mutex> outputLock(coutMutex);
+                cout << "Time " << currentTime << ": Doubled servers to " << serverarray.size() << endl;
+            }
         }
 
         // scale down logic
@@ -141,20 +149,28 @@ int main() {
                     serverThreads.push_back(thread(serverThread, ref(server), ref(balancer)));
                 }
             }
-
-            cout << "Time " << currentTime << ": Halved servers to " << serverarray.size() << endl;
+            {
+                lock_guard<mutex> outputLock(coutMutex);
+                cout << "Time " << currentTime << ": Halved servers to " << serverarray.size() << endl;
+            }
         }
         //  add new requests at random times to simulate new requests after the initial full queue you set up.
         if ((rand() % 10) == 0) {
             request req = generateRequest();
             balancer.addRequest(req);
             // cout << "Queue size: " << balancer.getSize() << endl;
-            cout << "Time " << currentTime << ": Request from " << req.ipIn << " to " << req.ipOut << " of type " << req.jobType << " has been generated" << endl;
+            {
+                lock_guard<mutex> outputLock(coutMutex);
+                cout << "Time " << currentTime << ": Request from " << req.ipIn << " to " << req.ipOut << " of type " << req.jobType << " has been generated" << endl;
+            }
         }
 
         // Simulate a burst of requests at rare times
         if ((rand() % REQUEST_BURST) == 0) {
-            cout << "Time " << currentTime << ": Request Burst has been generated" << endl;
+            {
+                lock_guard<mutex> outputLock(coutMutex);
+                cout << "Time " << currentTime << ": Request Burst has been generated" << endl;
+            }
              for (long unsigned int i = 0; i < REQUEST_BURST; i++) {
                 request req = generateRequest();
                 balancer.addRequest(req);
@@ -170,5 +186,8 @@ int main() {
         }
     }
     // show the ending queue size
-    cout << "Ending queue size: " << balancer.getSize() << endl;
+    {
+        lock_guard<mutex> outputLock(coutMutex);
+        cout << "Ending queue size: " << balancer.getSize() << endl;
+    }
 }
