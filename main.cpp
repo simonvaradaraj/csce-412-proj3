@@ -13,6 +13,7 @@ using namespace std;
 const int INITIAL_NUM_SERVERS = 10;   
 const int MIN_NUM_SERVERS = 4;   
 const int REQUEST_BURST = 1000;   
+const int CLOCK_CYCLES = 10000;   
 
 request generateRequest() {
     stringstream ipIn, ipOut;
@@ -49,7 +50,7 @@ int main() {
     }
 
     // Running for 10000 clock cycles
-    while (balancer.getSystemTime() < 10000) {
+    while (balancer.getSystemTime() < CLOCK_CYCLES) {
         // cout << "Time " << balancer.getSystemTime() << endl;
         int currentTime = balancer.getSystemTime();
 
