@@ -7,14 +7,17 @@ using namespace std;
 webserver::webserver() {
     this->name = "default";
     this->start_time = 0;
+    this->req = request();
 }
 
 webserver::webserver(string name) {
     this->name = name;
     this->start_time = 0;
+    this->req = request();
 }
 
 request webserver::getRequest() { return req; }
+int webserver::getStartTime() { return start_time; }
 string webserver::getName() { return name; }
 
 void webserver::processRequest(request req, int currentTime) {

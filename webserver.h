@@ -12,6 +12,7 @@ public:
     webserver();
     webserver(string name);
     request getRequest();
+    int getStartTime();
     string getName();
     void processRequest(request req, int currentTime);
     void setName(string name);

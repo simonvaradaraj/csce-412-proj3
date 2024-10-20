@@ -43,21 +43,31 @@ void serverThread(webserver& server, loadbalancer& balancer) {
         int currentTime = balancer.getSystemTime();
         // Lock to safely access the queue
         unique_lock<mutex> lock(queueMutex);
-
+        {
+            lock_guard<mutex> outputLock(coutMutex);
+            // execution, processing, assignment, etc.
+            cout << "[Time " << balancer.getSystemTime() << "]: " << server.getName() << " is " << (server.isDone(currentTime) ? "done" : "not done") << endl;
+        }
         if (server.isDone(currentTime)) {
             if (!balancer.isEmpty()) {
                 request req = server.getRequest();
-                if (req.jobType != ' ') {
+                {
                     lock_guard<mutex> outputLock(coutMutex);
                     // execution, processing, assignment, etc.
-                    cout <<  "Request from " << req.ipIn << " to " << req.ipOut << " of type " << req.jobType << " has been processed by " << server.getName() << endl;
+                    cout << "[Time " << balancer.getSystemTime() << "]: " <<  "Request from " << req.ipIn << " to " << req.ipOut << " of type " << req.jobType << " has been processed by " << server.getName() << endl;
                 }
                 // place a request if the server.getRequest() gives a valid response
                 server.processRequest(balancer.getRequest(), balancer.getSystemTime());
+                {
+                    lock_guard<mutex> outputLock(coutMutex);
+                    // execution, processing, assignment, etc.
+                    cout << "[Time " << balancer.getSystemTime() << "]: " << server.getName() << " has loaded a request that will finish at Time " << currentTime + server.getRequest().time << endl;
+                }
             }
         }
     }
 }
+
 
 int main() {
     srand(time(NULL));
@@ -97,6 +107,10 @@ int main() {
         name << "Server " << i+1;
         webserver server(name.str());
         server.processRequest(balancer.getRequest(), balancer.getSystemTime());
+        { 
+            lock_guard<mutex> outputLock(coutMutex);
+            cout << "[Time " << balancer.getSystemTime() << "]: " << server.getName() << " has loaded a request that will finish at Time " << balancer.getSystemTime() + server.getRequest().time << endl;
+        }
         serverarray.push_back(server);
         serverThreads.push_back(thread(serverThread, ref(serverarray[i]), ref(balancer)));
     }
@@ -123,12 +137,21 @@ int main() {
                 // Reset the stop flag and resize server array
                 stopThreads = false;
                 serverThreads.clear();
+                {
+                    lock_guard<mutex> outputLock(coutMutex);
+                    // show the dynamic change in number of servers
+                    cout << "[Time " << balancer.getSystemTime() << "]: " << "Doubling servers to " << serverarray.size() << endl;
+                }
                 // Add new servers
                 for (int i = 0; i < newServers; i++) {
                     stringstream name;
                     name << "Server " << serverarray.size() + 1;
                     webserver newServer(name.str());
                     newServer.processRequest(balancer.getRequest(), balancer.getSystemTime());
+                    { 
+                        lock_guard<mutex> outputLock(coutMutex);
+                        cout << "[Time " << balancer.getSystemTime() << "]: " << newServer.getName() << " has loaded a request that will finish at Time " << balancer.getSystemTime() + newServer.getRequest().time << endl;
+                    }
                     serverarray.push_back(newServer);
                 }
                 // Relaunch threads
@@ -136,11 +159,7 @@ int main() {
                     serverThreads.push_back(thread(serverThread, ref(server), ref(balancer)));
                 }
             }
-            {
-                lock_guard<mutex> outputLock(coutMutex);
-                // show the dynamic change in number of servers
-                cout << "Doubled servers to " << serverarray.size() << endl;
-            }
+            
         }
 
         // scale down logic
@@ -156,16 +175,16 @@ int main() {
                 // chopping the array in half
                 stopThreads = false;
                 serverThreads.clear();
+                {
+                    lock_guard<mutex> outputLock(coutMutex);
+                    // show the dynamic change in number of servers
+                    cout << "[Time " << balancer.getSystemTime() << "]: " <<  "Halfing servers to " << serverarray.size() << endl;
+                }
                 serverarray.resize(currentNumServers / 2);
                 // start up the threads after resizing
                 for (webserver &server : serverarray) {
                     serverThreads.push_back(thread(serverThread, ref(server), ref(balancer)));
                 }
-            }
-            {
-                lock_guard<mutex> outputLock(coutMutex);
-                // show the dynamic change in number of servers
-                cout << "Halved servers to " << serverarray.size() << endl;
             }
         }
         //  add new requests at random times to simulate new requests after the initial full queue you set up.
@@ -176,7 +195,7 @@ int main() {
             {
                 lock_guard<mutex> outputLock(coutMutex);
                 // randomness in request generation
-                cout << "Request from " << req.ipIn << " to " << req.ipOut << " of type " << req.jobType << " has been generated" << endl;
+                cout << "[Time " << balancer.getSystemTime() << "]: " << "Request from " << req.ipIn << " to " << req.ipOut << " of type " << req.jobType << " has been generated" << endl;
             }
         }
 
@@ -185,7 +204,7 @@ int main() {
             {
                 lock_guard<mutex> outputLock(coutMutex);
                 // randomness in request generation
-                cout << "Request Burst has been generated" << endl;
+                cout << "[Time " << balancer.getSystemTime() << "]: " << "Request Burst has been generated" << endl;
             }
             for (long unsigned int i = 0; i < REQUEST_BURST; i++) {
                 request req = generateRequest();
@@ -212,7 +231,10 @@ int main() {
             if (serverarray[i].getRequest().jobType != ' ') { cout << serverarray[i].getName() << ": Active" << endl;}
             else { cout << serverarray[i].getName() << ": Inactive" << endl;}
         }
-        // rejected/discarded requests later
+        // rejected/discarded requests
         cout << "------------------------------------------------------------" << endl;
     }
 }
+
+
+
