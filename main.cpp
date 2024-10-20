@@ -17,6 +17,7 @@ using namespace std;
 const int INITIAL_NUM_SERVERS = 10;   
 const int MIN_NUM_SERVERS = 4;   
 const int REQUEST_BURST = 1000;   
+const int CLOCK_CYCLES = 10000;
 
 // for shared access of resouroces
 mutex queueMutex; 
@@ -38,16 +39,14 @@ request generateRequest() {
 void serverThread(webserver& server, loadbalancer& balancer) {
     while (!stopThreads) {
         int currentTime = balancer.getSystemTime();
-
         // Lock to safely access the queue
         unique_lock<mutex> lock(queueMutex);
 
         if (server.isDone(currentTime)) {
-            if (balancer.getSize() > 0) {
+            if (!balancer.isEmpty()) {
                 request req = server.getRequest();
                 if (req.jobType != ' ') {
-                    cout << "Time " << currentTime << ": Request from " << req.ipIn << " to " << req.ipOut
-                         << " of type " << req.jobType << " has been processed by " << server.getName() << endl;
+                    cout << "Time " << currentTime << ": Request from " << req.ipIn << " to " << req.ipOut << " of type " << req.jobType << " has been processed by " << server.getName() << endl;
                 }
                 // place a request if the server.getRequest() gives a valid response
                 server.processRequest(balancer.getRequest(), balancer.getSystemTime());
@@ -71,6 +70,8 @@ int main() {
 
     // Replacing with a vector so i can resize it
     vector<webserver> serverarray;
+    // added a vector for the server threads too
+    vector<thread> serverThreads;
 
     // Start with the initial number of servers
     for (int i = 0; i < INITIAL_NUM_SERVERS; i++) {
@@ -79,10 +80,11 @@ int main() {
         webserver server(name.str());
         server.processRequest(balancer.getRequest(), balancer.getSystemTime());
         serverarray.push_back(server);
+        serverThreads.push_back(thread(serverThread, ref(serverarray[i]), ref(balancer)));
     }
 
     // Running for 10000 clock cycles
-    while (balancer.getSystemTime() < 10000) {
+    while (balancer.getSystemTime() < CLOCK_CYCLES) {
         // cout << "Time " << balancer.getSystemTime() << endl;
         int currentTime = balancer.getSystemTime();
 
@@ -93,33 +95,55 @@ int main() {
         // Scaling up logic
         if (queueSize > currentNumServers * 10) {
             int newServers = currentNumServers;  // make the same amount of newservers as the existing ones
-            for (int i = 0; i < newServers; i++) {
-                stringstream name;
-                name << "Server " << serverarray.size() + 1;
-                webserver newServer(name.str());
-                newServer.processRequest(balancer.getRequest(), balancer.getSystemTime());
-                serverarray.push_back(newServer);
+            {
+                lock_guard<mutex> guard(serverMutex);
+                stopThreads = true;  // Signal threads to stop
+                for (thread &t : serverThreads) {
+                    if (t.joinable()) {
+                        t.join();  // Wait for all threads to finish
+                    }
+                }
+                // Reset the stop flag and resize server array
+                stopThreads = false;
+                serverThreads.clear();
+                // Add new servers
+                for (int i = 0; i < newServers; i++) {
+                    stringstream name;
+                    name << "Server " << serverarray.size() + 1;
+                    webserver newServer(name.str());
+                    newServer.processRequest(balancer.getRequest(), balancer.getSystemTime());
+                    serverarray.push_back(newServer);
+                }
+                // Relaunch threads
+                for (webserver &server : serverarray) {
+                    serverThreads.push_back(thread(serverThread, ref(server), ref(balancer)));
+                }
             }
             cout << "Time " << currentTime << ": Doubled servers to " << serverarray.size() << endl;
         }
 
         // scale down logic
         else if (queueSize < currentNumServers && currentNumServers > MIN_NUM_SERVERS) {
-            serverarray.resize(currentNumServers / 2);
+            {
+                lock_guard<mutex> guard(serverMutex);
+                stopThreads = true;
+                for (thread &t : serverThreads) {
+                    if (t.joinable()) {
+                        t.join();  // finish the threads
+                    }
+                }
+                // chopping the array in half
+                stopThreads = false;
+                serverThreads.clear();
+                serverarray.resize(currentNumServers / 2);
+                // start up the threads after resizing
+                for (webserver &server : serverarray) {
+                    serverThreads.push_back(thread(serverThread, ref(server), ref(balancer)));
+                }
+            }
+
             cout << "Time " << currentTime << ": Halved servers to " << serverarray.size() << endl;
         }
-
-        // Process each server
-        for (long unsigned int i = 0; i < serverarray.size(); i++) {
-            if (serverarray[i].isDone(currentTime)) {
-                request req = serverarray[i].getRequest();
-                if (req.jobType != ' ') {
-                    cout << "Time " << currentTime << ": Request from " << req.ipIn << " to " << req.ipOut << " of type " << req.jobType << " has been processed by " << serverarray[i].getName() << endl;
-                }
-                serverarray[i].processRequest(balancer.getRequest(), balancer.getSystemTime());
-            }
-        }
-
         //  add new requests at random times to simulate new requests after the initial full queue you set up.
         if ((rand() % 10) == 0) {
             request req = generateRequest();
@@ -138,7 +162,13 @@ int main() {
         }
         balancer.incTime();
     }
-
-    // Show the ending queue size
+    stopThreads = true;
+    // join the threads one last time
+    for (thread& t : serverThreads) {
+        if (t.joinable()) {
+            t.join();
+        }
+    }
+    // show the ending queue size
     cout << "Ending queue size: " << balancer.getSize() << endl;
 }
