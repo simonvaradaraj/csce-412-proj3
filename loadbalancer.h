@@ -22,6 +22,7 @@
 #include <iostream>
 #include <string>
 #include <queue>
+#include <mutex>
 #include "request.h"
 
 class loadbalancer {
@@ -36,6 +37,7 @@ public:
 private:
     int systemTime;
     queue<request> requests;
+    mutex queueMutex;
 };
 
 #endif
