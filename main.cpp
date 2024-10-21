@@ -51,7 +51,7 @@ request generateRequest() {
 void serverThread(webserver& server, loadbalancer& balancer) {
     while (!stopThreads) {
         lock_guard<mutex> lock(queueMutex);
-        // int currentTime = balancer.getSystemTime();
+        int currentTime = balancer.getSystemTime();
         // Lock to safely access the queue
         {
             lock_guard<mutex> outputLock(coutMutex);
