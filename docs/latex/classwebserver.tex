@@ -1,0 +1,165 @@
+\hypertarget{classwebserver}{}\doxysection{webserver Class Reference}
+\label{classwebserver}\index{webserver@{webserver}}
+
+
+Represents a web server that processes network requests.  
+
+
+
+
+{\ttfamily \#include $<$webserver.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classwebserver_ae6f13a3cb80fe961cdaf70c7e03f36dc}{webserver}} ()
+\begin{DoxyCompactList}\small\item\em Default constructor for creating a webserver object. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classwebserver_a4d62d90c52a9feff92154fc41c5012ba}{webserver}} (string name)
+\begin{DoxyCompactList}\small\item\em Constructs a new webserver object with a specified name. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classrequest}{request}} \mbox{\hyperlink{classwebserver_a8e97c299c64c0f9f46052a88888c7fc9}{get\+Request}} ()
+\begin{DoxyCompactList}\small\item\em Gets the current request being processed by the web server. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{classwebserver_abaf7c05ca6d47a7800cfbcde62fa1744}{get\+Start\+Time}} ()
+\begin{DoxyCompactList}\small\item\em Gets the start time of the current request. \end{DoxyCompactList}\item 
+string \mbox{\hyperlink{classwebserver_ad7be985ce4df02c90c0abffd5bbeaa11}{get\+Name}} ()
+\begin{DoxyCompactList}\small\item\em Gets the name of the web server. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classwebserver_aee22d4a49a2668b67b3aabea3a10459e}{process\+Request}} (\mbox{\hyperlink{classrequest}{request}} req, int current\+Time)
+\begin{DoxyCompactList}\small\item\em Processes a new request on the web server, updating the start time. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classwebserver_a61c7e3cd7f4682601aae517acce300ca}{set\+Name}} (string name)
+\begin{DoxyCompactList}\small\item\em Sets the name of the web server. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classwebserver_acca209d3574c454cd0ef61474cd0eac2}{is\+Done}} (int current\+Time)
+\begin{DoxyCompactList}\small\item\em Checks if the current request has been processed. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Represents a web server that processes network requests. 
+
+A class representing a web server.
+
+The webserver class provides functionality to handle requests, manage server state, and maintain the server\textquotesingle{}s identity through its name. The class allows for processing requests and checking the server\textquotesingle{}s operational status based on the current time. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classwebserver_ae6f13a3cb80fe961cdaf70c7e03f36dc}\label{classwebserver_ae6f13a3cb80fe961cdaf70c7e03f36dc}} 
+\index{webserver@{webserver}!webserver@{webserver}}
+\index{webserver@{webserver}!webserver@{webserver}}
+\doxysubsubsection{\texorpdfstring{webserver()}{webserver()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily webserver\+::webserver (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Default constructor for creating a webserver object. 
+
+Initializes the server with a default name (\char`\"{}default\char`\"{}), a start time of 0, and an empty request. \mbox{\Hypertarget{classwebserver_a4d62d90c52a9feff92154fc41c5012ba}\label{classwebserver_a4d62d90c52a9feff92154fc41c5012ba}} 
+\index{webserver@{webserver}!webserver@{webserver}}
+\index{webserver@{webserver}!webserver@{webserver}}
+\doxysubsubsection{\texorpdfstring{webserver()}{webserver()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily webserver\+::webserver (\begin{DoxyParamCaption}\item[{string}]{name }\end{DoxyParamCaption})}
+
+
+
+Constructs a new webserver object with a specified name. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & The name of the web server. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classwebserver_ad7be985ce4df02c90c0abffd5bbeaa11}\label{classwebserver_ad7be985ce4df02c90c0abffd5bbeaa11}} 
+\index{webserver@{webserver}!getName@{getName}}
+\index{getName@{getName}!webserver@{webserver}}
+\doxysubsubsection{\texorpdfstring{getName()}{getName()}}
+{\footnotesize\ttfamily string webserver\+::get\+Name (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Gets the name of the web server. 
+
+\begin{DoxyReturn}{Returns}
+string The name of the server. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classwebserver_a8e97c299c64c0f9f46052a88888c7fc9}\label{classwebserver_a8e97c299c64c0f9f46052a88888c7fc9}} 
+\index{webserver@{webserver}!getRequest@{getRequest}}
+\index{getRequest@{getRequest}!webserver@{webserver}}
+\doxysubsubsection{\texorpdfstring{getRequest()}{getRequest()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classrequest}{request}} webserver\+::get\+Request (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Gets the current request being processed by the web server. 
+
+\begin{DoxyReturn}{Returns}
+request The request object being processed. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classwebserver_abaf7c05ca6d47a7800cfbcde62fa1744}\label{classwebserver_abaf7c05ca6d47a7800cfbcde62fa1744}} 
+\index{webserver@{webserver}!getStartTime@{getStartTime}}
+\index{getStartTime@{getStartTime}!webserver@{webserver}}
+\doxysubsubsection{\texorpdfstring{getStartTime()}{getStartTime()}}
+{\footnotesize\ttfamily int webserver\+::get\+Start\+Time (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Gets the start time of the current request. 
+
+\begin{DoxyReturn}{Returns}
+int The start time of the current request being processed by the server. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classwebserver_acca209d3574c454cd0ef61474cd0eac2}\label{classwebserver_acca209d3574c454cd0ef61474cd0eac2}} 
+\index{webserver@{webserver}!isDone@{isDone}}
+\index{isDone@{isDone}!webserver@{webserver}}
+\doxysubsubsection{\texorpdfstring{isDone()}{isDone()}}
+{\footnotesize\ttfamily bool webserver\+::is\+Done (\begin{DoxyParamCaption}\item[{int}]{current\+Time }\end{DoxyParamCaption})}
+
+
+
+Checks if the current request has been processed. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em current\+Time} & The current system time. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true If the request has been completed. 
+
+false If the request is still being processed. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classwebserver_aee22d4a49a2668b67b3aabea3a10459e}\label{classwebserver_aee22d4a49a2668b67b3aabea3a10459e}} 
+\index{webserver@{webserver}!processRequest@{processRequest}}
+\index{processRequest@{processRequest}!webserver@{webserver}}
+\doxysubsubsection{\texorpdfstring{processRequest()}{processRequest()}}
+{\footnotesize\ttfamily void webserver\+::process\+Request (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classrequest}{request}}}]{req,  }\item[{int}]{current\+Time }\end{DoxyParamCaption})}
+
+
+
+Processes a new request on the web server, updating the start time. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em req} & The request to be processed. \\
+\hline
+{\em current\+Time} & The current time when the request starts being processed. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classwebserver_a61c7e3cd7f4682601aae517acce300ca}\label{classwebserver_a61c7e3cd7f4682601aae517acce300ca}} 
+\index{webserver@{webserver}!setName@{setName}}
+\index{setName@{setName}!webserver@{webserver}}
+\doxysubsubsection{\texorpdfstring{setName()}{setName()}}
+{\footnotesize\ttfamily void webserver\+::set\+Name (\begin{DoxyParamCaption}\item[{string}]{name }\end{DoxyParamCaption})}
+
+
+
+Sets the name of the web server. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em name} & The new name of the server. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/mnt/c/\+Users/\+SVara/\+Coding/412/proj3/csce-\/412-\/proj3/\mbox{\hyperlink{webserver_8h}{webserver.\+h}}\item 
+/mnt/c/\+Users/\+SVara/\+Coding/412/proj3/csce-\/412-\/proj3/webserver.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,115 @@
+\hypertarget{classloadbalancer}{}\doxysection{loadbalancer Class Reference}
+\label{classloadbalancer}\index{loadbalancer@{loadbalancer}}
+
+
+A class representing a load balancer that manages and distributes requests.  
+
+
+
+
+{\ttfamily \#include $<$loadbalancer.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classloadbalancer_ad453fd2fc0c910f82ef31c18353fc774}\label{classloadbalancer_ad453fd2fc0c910f82ef31c18353fc774}} 
+\mbox{\hyperlink{classloadbalancer_ad453fd2fc0c910f82ef31c18353fc774}{loadbalancer}} ()
+\begin{DoxyCompactList}\small\item\em Constructs a new loadbalancer object, initializing the system time to 0. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{classloadbalancer_af8a13aad690575634683859792413c48}{get\+System\+Time}} ()
+\begin{DoxyCompactList}\small\item\em Gets the current system time of the load balancer. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classloadbalancer_a1db40a4c03bb309672ce0f334fcccc83}\label{classloadbalancer_a1db40a4c03bb309672ce0f334fcccc83}} 
+void \mbox{\hyperlink{classloadbalancer_a1db40a4c03bb309672ce0f334fcccc83}{inc\+Time}} ()
+\begin{DoxyCompactList}\small\item\em Increments the system time of the load balancer by 1. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classloadbalancer_a2c45d009dffc50f5d5d3a6c2b295311d}{add\+Request}} (\mbox{\hyperlink{classrequest}{request}} req)
+\begin{DoxyCompactList}\small\item\em Adds a new request to the load balancer\textquotesingle{}s queue. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classrequest}{request}} \mbox{\hyperlink{classloadbalancer_a3d1715e4b2218a7aa9ad74e3e4fa6167}{get\+Request}} ()
+\begin{DoxyCompactList}\small\item\em Fetches and removes the next request from the load balancer\textquotesingle{}s queue. \end{DoxyCompactList}\item 
+int \mbox{\hyperlink{classloadbalancer_a8f4ae84ee09baadb3313ee1ff0410a59}{get\+Size}} ()
+\begin{DoxyCompactList}\small\item\em Gets the number of requests currently in the load balancer\textquotesingle{}s queue. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classloadbalancer_a542b0b5b5759c074e3e8d1cbf1f33b52}{is\+Empty}} ()
+\begin{DoxyCompactList}\small\item\em Checks if the load balancer\textquotesingle{}s request queue is empty. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A class representing a load balancer that manages and distributes requests. 
+
+A class representing a load balancer for handling requests.
+
+The loadbalancer class facilitates the management of requests in a queue, allowing for the addition and retrieval of requests. It also tracks the system time, enabling operations that depend on time simulation. The class includes methods to check the size of the request queue and determine if it is empty. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classloadbalancer_a2c45d009dffc50f5d5d3a6c2b295311d}\label{classloadbalancer_a2c45d009dffc50f5d5d3a6c2b295311d}} 
+\index{loadbalancer@{loadbalancer}!addRequest@{addRequest}}
+\index{addRequest@{addRequest}!loadbalancer@{loadbalancer}}
+\doxysubsubsection{\texorpdfstring{addRequest()}{addRequest()}}
+{\footnotesize\ttfamily void loadbalancer\+::add\+Request (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classrequest}{request}}}]{req }\end{DoxyParamCaption})}
+
+
+
+Adds a new request to the load balancer\textquotesingle{}s queue. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em req} & The request object to be added to the queue. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classloadbalancer_a3d1715e4b2218a7aa9ad74e3e4fa6167}\label{classloadbalancer_a3d1715e4b2218a7aa9ad74e3e4fa6167}} 
+\index{loadbalancer@{loadbalancer}!getRequest@{getRequest}}
+\index{getRequest@{getRequest}!loadbalancer@{loadbalancer}}
+\doxysubsubsection{\texorpdfstring{getRequest()}{getRequest()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classrequest}{request}} loadbalancer\+::get\+Request (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Fetches and removes the next request from the load balancer\textquotesingle{}s queue. 
+
+\begin{DoxyReturn}{Returns}
+request The next request in the queue. If the queue is empty, it returns an empty request. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classloadbalancer_a8f4ae84ee09baadb3313ee1ff0410a59}\label{classloadbalancer_a8f4ae84ee09baadb3313ee1ff0410a59}} 
+\index{loadbalancer@{loadbalancer}!getSize@{getSize}}
+\index{getSize@{getSize}!loadbalancer@{loadbalancer}}
+\doxysubsubsection{\texorpdfstring{getSize()}{getSize()}}
+{\footnotesize\ttfamily int loadbalancer\+::get\+Size (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Gets the number of requests currently in the load balancer\textquotesingle{}s queue. 
+
+\begin{DoxyReturn}{Returns}
+int The number of requests in the queue. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classloadbalancer_af8a13aad690575634683859792413c48}\label{classloadbalancer_af8a13aad690575634683859792413c48}} 
+\index{loadbalancer@{loadbalancer}!getSystemTime@{getSystemTime}}
+\index{getSystemTime@{getSystemTime}!loadbalancer@{loadbalancer}}
+\doxysubsubsection{\texorpdfstring{getSystemTime()}{getSystemTime()}}
+{\footnotesize\ttfamily int loadbalancer\+::get\+System\+Time (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Gets the current system time of the load balancer. 
+
+\begin{DoxyReturn}{Returns}
+int The current system time. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classloadbalancer_a542b0b5b5759c074e3e8d1cbf1f33b52}\label{classloadbalancer_a542b0b5b5759c074e3e8d1cbf1f33b52}} 
+\index{loadbalancer@{loadbalancer}!isEmpty@{isEmpty}}
+\index{isEmpty@{isEmpty}!loadbalancer@{loadbalancer}}
+\doxysubsubsection{\texorpdfstring{isEmpty()}{isEmpty()}}
+{\footnotesize\ttfamily bool loadbalancer\+::is\+Empty (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Checks if the load balancer\textquotesingle{}s request queue is empty. 
+
+\begin{DoxyReturn}{Returns}
+true If the queue is empty. 
+
+false If there are requests in the queue. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/mnt/c/\+Users/\+SVara/\+Coding/412/proj3/csce-\/412-\/proj3/\mbox{\hyperlink{loadbalancer_8h}{loadbalancer.\+h}}\item 
+/mnt/c/\+Users/\+SVara/\+Coding/412/proj3/csce-\/412-\/proj3/loadbalancer.\+cpp\end{DoxyCompactItemize}

@@ -1,0 +1,98 @@
+\hypertarget{classrequest}{}\doxysection{request Class Reference}
+\label{classrequest}\index{request@{request}}
+
+
+A class representing a network request with input and output IPs, a time duration, and a job type.  
+
+
+
+
+{\ttfamily \#include $<$request.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classrequest_ae49e0b00a54017889a18e955b88087f6}{request}} ()
+\begin{DoxyCompactList}\small\item\em Default constructor for the request class. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classrequest_ae04b50005e1fbe777cc40abea4ffa199}{request}} (string ip\+In, string ip\+Out, int time, char job\+Type)
+\begin{DoxyCompactList}\small\item\em Constructs a new request with the specified parameters. \end{DoxyCompactList}\item 
+string \mbox{\hyperlink{classrequest_a0dfe6d583dddb9f0b4bbf0477474c48a}{to\+String}} ()
+\begin{DoxyCompactList}\small\item\em Converts the request object into a string representation. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classrequest_a8d88f93bd8caf077c0ffcfe2df8254a1}\label{classrequest_a8d88f93bd8caf077c0ffcfe2df8254a1}} 
+string {\bfseries ip\+In}
+\item 
+\mbox{\Hypertarget{classrequest_a40c097326318254d0f1a5f9b4e065ad0}\label{classrequest_a40c097326318254d0f1a5f9b4e065ad0}} 
+string {\bfseries ip\+Out}
+\item 
+\mbox{\Hypertarget{classrequest_a153095eecc7c0aae5551654c3304faad}\label{classrequest_a153095eecc7c0aae5551654c3304faad}} 
+int {\bfseries time}
+\item 
+\mbox{\Hypertarget{classrequest_a01ba40d977db5174b78062ede1a57486}\label{classrequest_a01ba40d977db5174b78062ede1a57486}} 
+char {\bfseries job\+Type}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A class representing a network request with input and output IPs, a time duration, and a job type. 
+
+A class representing an incoming request.
+
+The request class encapsulates the details of a network request, including the input and output IP addresses, the time associated with the request, and the type of job it represents. It provides a constructor for initializing these attributes and a method for converting the request data into a human-\/readable string format. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classrequest_ae49e0b00a54017889a18e955b88087f6}\label{classrequest_ae49e0b00a54017889a18e955b88087f6}} 
+\index{request@{request}!request@{request}}
+\index{request@{request}!request@{request}}
+\doxysubsubsection{\texorpdfstring{request()}{request()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily request\+::request (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Default constructor for the request class. 
+
+This is a dummy constructor that initializes an empty request. It will not be used for actual request handling. \mbox{\Hypertarget{classrequest_ae04b50005e1fbe777cc40abea4ffa199}\label{classrequest_ae04b50005e1fbe777cc40abea4ffa199}} 
+\index{request@{request}!request@{request}}
+\index{request@{request}!request@{request}}
+\doxysubsubsection{\texorpdfstring{request()}{request()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily request\+::request (\begin{DoxyParamCaption}\item[{string}]{ip\+In,  }\item[{string}]{ip\+Out,  }\item[{int}]{time,  }\item[{char}]{job\+Type }\end{DoxyParamCaption})}
+
+
+
+Constructs a new request with the specified parameters. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ip\+In} & The input IP address for the request. \\
+\hline
+{\em ip\+Out} & The output IP address for the request. \\
+\hline
+{\em time} & The time required to process the request. \\
+\hline
+{\em job\+Type} & The type of the job (\textquotesingle{}P\textquotesingle{} for processing, \textquotesingle{}S\textquotesingle{} for streaming). \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classrequest_a0dfe6d583dddb9f0b4bbf0477474c48a}\label{classrequest_a0dfe6d583dddb9f0b4bbf0477474c48a}} 
+\index{request@{request}!toString@{toString}}
+\index{toString@{toString}!request@{request}}
+\doxysubsubsection{\texorpdfstring{toString()}{toString()}}
+{\footnotesize\ttfamily string request\+::to\+String (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Converts the request object into a string representation. 
+
+\begin{DoxyReturn}{Returns}
+string A string describing the request with input IP, output IP, and job type. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+/mnt/c/\+Users/\+SVara/\+Coding/412/proj3/csce-\/412-\/proj3/\mbox{\hyperlink{request_8h}{request.\+h}}\item 
+/mnt/c/\+Users/\+SVara/\+Coding/412/proj3/csce-\/412-\/proj3/request.\+cpp\end{DoxyCompactItemize}

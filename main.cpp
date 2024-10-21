@@ -28,6 +28,11 @@ mutex coutMutex;
 atomic<bool> stopThreads(false);
 condition_variable cv;
 
+/**
+ * @brief Generates a random request with random IP addresses and processing time.
+ * 
+ * @return request A randomly generated request.
+ */
 request generateRequest() {
     stringstream ipIn, ipOut;
     ipIn << (rand() % 256) << "." << (rand() % 256) << "." << (rand() % 256) << "." << (rand() % 256);
@@ -37,7 +42,12 @@ request generateRequest() {
     return req;
 }
 
-// function that will be running on each server thread
+/**
+ * @brief Thread function that runs on each server. Processes requests from the load balancer.
+ * 
+ * @param server A reference to the webserver object that processes requests.
+ * @param balancer A reference to the loadbalancer object that holds the requests.
+ */
 void serverThread(webserver& server, loadbalancer& balancer) {
     while (!stopThreads) {
         int currentTime = balancer.getSystemTime();
@@ -68,7 +78,13 @@ void serverThread(webserver& server, loadbalancer& balancer) {
     }
 }
 
-
+/**
+ * @brief Main function that sets up the load balancer, servers, and runs the simulation.
+ * 
+ * The function sets up the initial server pool, adds requests to the load balancer, and manages scaling the number of servers based on request load.
+ * 
+ * @return int Return 0 upon successful execution.
+ */
 int main() {
     srand(time(NULL));
     loadbalancer balancer;
