@@ -59,23 +59,23 @@ void serverThread(webserver& server, loadbalancer& balancer) {
              cout << "[Time " << balancer.getSystemTime() << "]: " << server.getName() << " Running" << endl;
             // cout << "[Time " << balancer.getSystemTime() << "]: " << server.getName() << " is " << (server.isDone(currentTime) ? "done" : "not done") << endl;
         }
-        // if (server.isDone(currentTime)) {
-        //     if (!balancer.isEmpty()) {
-        //         request req = server.getRequest();
-        //         {
-        //             lock_guard<mutex> outputLock(coutMutex);
-        //             // execution, processing, assignment, etc.
-        //             cout << "[Time " << balancer.getSystemTime() << "]: " <<  "Request from " << req.ipIn << " to " << req.ipOut << " of type " << req.jobType << " has been processed by " << server.getName() << endl;
-        //         }
-        //         // place a request if the server.getRequest() gives a valid response
-        //         server.processRequest(balancer.getRequest(), balancer.getSystemTime());
-        //         {
-        //             lock_guard<mutex> outputLock(coutMutex);
-        //             // execution, processing, assignment, etc.
-        //             cout << "[Time " << balancer.getSystemTime() << "]: " << server.getName() << " has loaded a request that will finish at Time " << currentTime + server.getRequest().time << endl;
-        //         }
-        //     }
-        // }
+        if (server.isDone(currentTime)) {
+            if (!balancer.isEmpty()) {
+                request req = server.getRequest();
+                {
+                    lock_guard<mutex> outputLock(coutMutex);
+                    // execution, processing, assignment, etc.
+                    cout << "[Time " << balancer.getSystemTime() << "]: " <<  "Request from " << req.ipIn << " to " << req.ipOut << " of type " << req.jobType << " has been processed by " << server.getName() << endl;
+                }
+                // place a request if the server.getRequest() gives a valid response
+                server.processRequest(balancer.getRequest(), balancer.getSystemTime());
+                {
+                    lock_guard<mutex> outputLock(coutMutex);
+                    // execution, processing, assignment, etc.
+                    cout << "[Time " << balancer.getSystemTime() << "]: " << server.getName() << " has loaded a request that will finish at Time " << currentTime + server.getRequest().time << endl;
+                }
+            }
+        }
         
         // std::this_thread::sleep_for(std::chrono::milliseconds(200));
     }
